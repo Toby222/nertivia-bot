@@ -1,0 +1,64 @@
+{
+  "name": "nertivia-bot",
+  "version": "0.0.1",
+  "description": "Nertivia bot library",
+  "type": "module",
+  "scripts": {
+    "build": "rm -r -f ./dist/ && tsc",
+    "lint": "eslint ./src/**/*.ts",
+    "test": "tsc --noEmit true && npm run lint",
+    "docs": "rm -r -f ./docs/ && typedoc --options ./typedoc.json"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/toman222/nertivia-bot.git"
+  },
+  "author": "Toby",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/toman222/nertivia-bot/issues"
+  },
+  "homepage": "https://github.com/toman222/nertivia-bot#readme",
+  "dependencies": {
+    "lexure": "^0.13.1",
+    "nertivia.js": "git://github.com/toman222/nertivia.js.git#build"
+  },
+  "devDependencies": {
+    "@types/node": "^14.0.27",
+    "@typescript-eslint/eslint-plugin": "^3.7.1",
+    "@typescript-eslint/parser": "^3.7.1",
+    "eslint": "^7.5.0",
+    "eslint-config-standard": "^14.1.1",
+    "eslint-plugin-import": "^2.22.0",
+    "eslint-plugin-node": "^11.1.0",
+    "eslint-plugin-promise": "^4.2.1",
+    "eslint-plugin-standard": "^4.0.1",
+    "eslint-plugin-tsdoc": "^0.2.6",
+    "typedoc": "^0.17.8",
+    "typescript": "^3.9.7"
+  },
+  "eslintConfig": {
+    "parser": "@typescript-eslint/parser",
+    "rules": {
+      "@typescript-eslint/no-unused-vars": [
+        "warn",
+        {
+          "args": "all",
+          "argsIgnorePattern": "^_",
+          "varsIgnorePattern": "^_"
+        }
+      ],
+      "@typescript-eslint/no-empty-function": "off",
+      "tsdoc/syntax": "warn"
+    },
+    "extends": [
+      "eslint:recommended",
+      "standard",
+      "plugin:@typescript-eslint/recommended"
+    ],
+    "plugins": [
+      "@typescript-eslint/eslint-plugin",
+      "eslint-plugin-tsdoc"
+    ]
+  }
+}

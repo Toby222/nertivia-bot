@@ -1,0 +1,10 @@
+{
+  "inputFiles": ["./src"],
+  "mode": "modules",
+  "theme": "minimal",
+  "exclude": ["./src/index.ts"],
+  "out": "./docs/",
+  "name": "Nertivia Bot",
+  "includeVersion": true,
+  "hideGenerator": true
+}
