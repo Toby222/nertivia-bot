@@ -1,7 +1,5 @@
 /* eslint @typescript-eslint/no-namespace: "off", import/export: "off" */
-import { Bot, CommandArgs, Embed } from 'nertivia-bot'
-
-import { Message } from 'nertivia.js'
+import { Bot, CommandArgs, Embed, Message } from 'nertivia-bot'
 
 export async function rainbow (_bot: Bot, msg: Message, args: CommandArgs): Promise<void> {
   let result = ''

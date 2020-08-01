@@ -1,8 +1,6 @@
-import { Presence, ServerMember, Guild, Channel, Role, Message } from 'nertivia.js'
-
 import { IMessageButton } from 'nertivia.js/dist/Interfaces/MessageButton'
 
-import { Bot } from 'nertivia-bot'
+import { Bot, Presence, ServerMember, Guild, Channel, Role, Message } from 'nertivia-bot'
 
 export class CustomBot extends Bot {
   prefix: string
