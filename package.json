@@ -3,6 +3,8 @@
   "version": "0.0.2",
   "description": "Nertivia bot library",
   "type": "module",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
   "scripts": {
     "build": "rm -r -f ./dist/ && tsc",
     "lint": "eslint ./src/**/*.ts",
