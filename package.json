@@ -2,7 +2,6 @@
   "name": "nertivia-bot",
   "version": "0.0.2",
   "description": "Nertivia bot library",
-  "type": "module",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "scripts": {
@@ -11,20 +10,8 @@
     "test": "tsc --noEmit true && npm run lint",
     "docs": "rm -r -f ./docs/ && typedoc --options ./typedoc.json"
   },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/toman222/nertivia-bot.git"
-  },
   "author": "Toby",
   "license": "ISC",
-  "bugs": {
-    "url": "https://github.com/toman222/nertivia-bot/issues"
-  },
-  "homepage": "https://github.com/toman222/nertivia-bot#readme",
-  "dependencies": {
-    "lexure": "^0.13.1",
-    "nertivia.js": "git://github.com/toman222/nertivia.js.git#build"
-  },
   "devDependencies": {
     "@types/node": "^14.0.27",
     "@typescript-eslint/eslint-plugin": "^3.7.1",
@@ -38,6 +25,23 @@
     "eslint-plugin-tsdoc": "^0.2.6",
     "typedoc": "^0.17.8",
     "typescript": "^3.9.7"
+  },
+  "dependencies": {
+    "lexure": "^0.13.1",
+    "nertivia.js": "git://github.com/toman222/nertivia.js.git#build"
+  },
+  "directoeries": {
+    "example": "example"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/toman222/nertivia-bot.git"
+  },
+  "bugs": {
+    "url": "https://github.com/toman222/nertivia-bot/issues"
+  },
+  "homepage": {
+    "url": "https://github.com/toman222/nertivia-bot#readme"
   },
   "eslintConfig": {
     "parser": "@typescript-eslint/parser",
