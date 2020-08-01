@@ -2,3 +2,10 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 var Bot_1 = require("./Bot");
 Object.defineProperty(exports, "Bot", { enumerable: true, get: function () { return Bot_1.Bot; } });
+var nertivia_js_1 = require("nertivia.js");
+Object.defineProperty(exports, "Channel", { enumerable: true, get: function () { return nertivia_js_1.Channel; } });
+Object.defineProperty(exports, "Guild", { enumerable: true, get: function () { return nertivia_js_1.Guild; } });
+Object.defineProperty(exports, "ServerMember", { enumerable: true, get: function () { return nertivia_js_1.ServerMember; } });
+Object.defineProperty(exports, "Message", { enumerable: true, get: function () { return nertivia_js_1.Message; } });
+Object.defineProperty(exports, "Presence", { enumerable: true, get: function () { return nertivia_js_1.Presence; } });
+Object.defineProperty(exports, "Role", { enumerable: true, get: function () { return nertivia_js_1.Role; } });
