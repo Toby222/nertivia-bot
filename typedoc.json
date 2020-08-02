@@ -6,5 +6,6 @@
   "out": "./docs/",
   "name": "Nertivia Bot",
   "includeVersion": true,
-  "hideGenerator": true
+  "hideGenerator": true,
+  "sourcefile-url-prefix": "https://github.com/toman222/nertivia-bot/tree/main/"
 }
