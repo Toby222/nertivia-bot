@@ -7,12 +7,34 @@ import { Command } from '.'
 
 import * as Lexure from 'lexure'
 
+/**
+ * Options to pass to a new Bot instance
+ */
 export interface BotOpts {
-  token: string
+  /**
+   * A token to use for authentication
+   *
+   * @remarks
+   * A token passed to the {@link Bot.login} method will overwrite this.
+   */
+  token?: string
 }
 
+/**
+ * Intermediate class between API Client and a command-ready bot
+ *
+ * @param opts - The options to the bot.
+ */
 export abstract class Bot extends Client implements IClientEvents {
-  constructor (opts: Partial<BotOpts>) {
+  /** Authentication token to use on login if no other one is supplied. */
+  private loginToken?: string
+  /** Collection of the Bot's commands by name. */
+  readonly commands: Map<string, Command> = new Map<string, Command>()
+
+  /**
+   * @param opts - The options to the bot.
+   */
+  constructor (opts: BotOpts) {
     super()
 
     this.loginToken = opts.token
@@ -24,7 +46,7 @@ export abstract class Bot extends Client implements IClientEvents {
         throw new Error('Bot tried to bind non-existent event: ' + eventRaw + ' in constructor')
       }
       if (this[event] === undefined) {
-        throw new Error('Bot doesn\'t bind existing event: ' + eventRaw + ' in constructor')
+        throw new Error("Bot doesn't bind existing event: " + eventRaw + ' in constructor')
       }
       switch (event) {
         case 'message':
@@ -37,7 +59,16 @@ export abstract class Bot extends Client implements IClientEvents {
     }
   }
 
-  async handleMessage (message: Message): Promise<void> {
+  /**
+   * Gets called whenever the client receives a message.
+   *
+   * @remarks
+   * Distinct from the {@link message} function in that it also triggers the command handler.
+   *
+   * @param message - The Message that triggered the function call
+   * @internal
+   */
+  private async handleMessage (message: Message): Promise<void> {
     await this.message(message)
 
     if (message.content === undefined) { return }
@@ -49,6 +80,15 @@ export abstract class Bot extends Client implements IClientEvents {
     }
   }
 
+  /**
+   *
+   * @returns
+   * If successful, as determined by {@link Bot.triggersCommand}, the Command and Arguments.
+   * Null otherwise.
+   *
+   * @param str - The string to work on.
+   * @sealed
+   */
   parseCommand (str: string): [Command, Lexure.Args] | null {
     const lexer = new Lexure.Lexer(str)
       .setQuotes([['"', '"'], ["'", "'"], ['“', '”']])
@@ -69,6 +109,15 @@ export abstract class Bot extends Client implements IClientEvents {
     return [command, new Lexure.Args(parser.parse())]
   }
 
+  /**
+   * Registers a new Command to the bot.
+   *
+   * @param name - The name to assign for the command. Each name can only be assigned once.
+   * @param command - The command to assign.
+   * @param overwrite - Whether to force assigning a command, even if the name is already registered.
+   *
+   * @sealed
+   */
   registerCommand (name: string, command: Command, overwrite = false): void {
     const existingCommand = this.commands.get(name)
     if (existingCommand !== undefined && !overwrite) {
@@ -80,6 +129,11 @@ export abstract class Bot extends Client implements IClientEvents {
     this.commands.set(name, command)
   }
 
+  /**
+   *
+   * @param name - The name of the command to unregister.
+   * @param force - Whether to force unassigning, even if there is no command of that name.
+   */
   unregisterCommand (name: string, force = false): void {
     const command = this.commands.get(name)
     if (command === undefined) {
@@ -93,26 +147,107 @@ export abstract class Bot extends Client implements IClientEvents {
     this.commands.delete(name)
   }
 
-  private loginToken?: string
-  readonly commands: Map<string, Command> = new Map<string, Command>()
-
+  /**
+   * Gets called whenever a channel is created that is visible to the Bot.
+   * @param channel - The newly created Channel.
+   */
   abstract async channelCreate(channel: Channel): Promise<void>
+
+  /**
+   * Gets called whenever a channel that is visible to the Bot is deleted.
+   * @param channel - The newly deleted Channel
+   */
   abstract async channelDelete(channel: Channel): Promise<void>
+
+  /**
+   * Gets called whenever a command throws an error.
+   * @param error - The Error that was thrown
+   */
   abstract async error(error: Error): Promise<void>
+
+  /**
+   * Gets called whenever a guild is created that is visible to the Bot.
+   * @param guild - The newly created Guild
+   */
   abstract async guildCreate(guild: Guild): Promise<void>
+
+  /**
+   * Gets called whenever a guild that is visible to the Bot gets deleted.
+   * @param guild - The newly deleted Guild
+   */
   abstract async guildDelete(guild: Guild): Promise<void>
+
+  /**
+   * Gets called whenever a new member joins a guild visible to the Bot.
+   * @param serverMember - The new Guild member
+   */
   abstract async guildMemberAdd(serverMember: ServerMember): Promise<void>
+
+  /**
+   * Gets called whenever a member leaves a guild for any reason.
+   * @param serverMember - The old Guild member
+   */
   abstract async guildMemberRemove(serverMember: ServerMember): Promise<void>
+
+  /**
+   * Gets called whenever the client receives a message.
+   *
+   * @remarks
+   * Keep in mind that this gets called before the message is passed to the command handler.
+   *
+   * @param message - The message that triggered the function call
+   */
   abstract async message(message: Message): Promise<void>
-  abstract async messageButtonClicked(Button: IMessageButton, done: (message?: string) => Promise<Record<string, unknown>>): Promise<void>
+
+  /**
+   * Gets called when a user clicks a button on a message sent by the bot.
+   * @param button - The Button that was clicked
+   * @param done - The function to call after the bot has finished processing the event
+   */
+  abstract async messageButtonClicked(button: IMessageButton, done: (/** A message to display to the user that just clicked the button */message?: string) => Promise<Record<string, unknown>>): Promise<void>
+
+  /**
+   * Gets called whenever a message visible to the bot is updated.
+   * @param message - The message as it appears after the update
+   */
   abstract async messageUpdate(message: Message): Promise<void>
+
+  /**
+   * Gets called whenever a visible user changes their presence.
+   * @param presence - The new presence
+   */
   abstract async presenceUpdate(presence: Presence): Promise<void>
+
+  /**
+   * Gets called after the bot has finished authentication.
+   */
   abstract async ready(): Promise<void>
+
+  /**
+   * Gets called whenever a role is created taht is visible to the bot.
+   * @param role - The newly created role
+   */
   abstract async roleCreate(role: Role): Promise<void>
+
+  /**
+   * Gets called whenever a role visible to the bot is updated.
+   * @param role - The role as it appears after the update
+   */
   abstract async roleUpdate(role: Role): Promise<void>
 
+  /**
+   * Determines whether or not a string triggers a command.
+   * Example use would be for prefix checks.
+   * @param string - The string to check.
+   */
   abstract triggersCommand(string: string): number|null
 
+  /**
+   * Authenticate with the server.
+   * @param token - The token to authenticate with. If not passed, uses the token passed in the constructor.
+   * @throws
+   * Throws error if there is no token to authenticate with.
+   */
   async login (token?: string): Promise<unknown> {
     return super.login(token ?? this.loginToken ?? (() => { throw new Error('Tried to start bot without token.') })())
   }
