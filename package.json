@@ -22,7 +22,6 @@
     "eslint-plugin-node": "^11.1.0",
     "eslint-plugin-promise": "^4.2.1",
     "eslint-plugin-standard": "^4.0.1",
-    "eslint-plugin-tsdoc": "^0.2.6",
     "typedoc": "^0.17.8",
     "typedoc-plugin-sourcefile-url": "^1.0.6",
     "typescript": "^3.9.7"
@@ -41,9 +40,7 @@
   "bugs": {
     "url": "https://github.com/toman222/nertivia-bot/issues"
   },
-  "homepage": {
-    "url": "https://github.com/toman222/nertivia-bot#readme"
-  },
+  "homepage": "https://github.com/toman222/nertivia-bot#readme",
   "eslintConfig": {
     "parser": "@typescript-eslint/parser",
     "rules": {
