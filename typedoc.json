@@ -1,11 +1,11 @@
 {
   "inputFiles": ["./src"],
   "mode": "modules",
-  "theme": "minimal",
   "exclude": ["./src/index.ts"],
   "out": "./docs/",
   "name": "Nertivia Bot",
   "includeVersion": true,
   "hideGenerator": true,
-  "sourcefile-url-prefix": "https://github.com/toman222/nertivia-bot/tree/main/"
+  "sourcefile-url-prefix": "https://github.com/toman222/nertivia-bot/tree/main/",
+  "categoryOrder": ["Event Handler", "*"]
 }

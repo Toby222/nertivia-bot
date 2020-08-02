@@ -118,6 +118,7 @@ export abstract class Bot extends Client implements IClientEvents {
    *
    * @sealed
    */
+
   registerCommand (name: string, command: Command, overwrite = false): void {
     const existingCommand = this.commands.get(name)
     if (existingCommand !== undefined && !overwrite) {
@@ -150,42 +151,49 @@ export abstract class Bot extends Client implements IClientEvents {
   /**
    * Gets called whenever a channel is created that is visible to the Bot.
    * @param channel - The newly created Channel.
+   * @category Event Handler
    */
   abstract async channelCreate(channel: Channel): Promise<void>
 
   /**
    * Gets called whenever a channel that is visible to the Bot is deleted.
    * @param channel - The newly deleted Channel
+   * @category Event Handler
    */
   abstract async channelDelete(channel: Channel): Promise<void>
 
   /**
    * Gets called whenever a command throws an error.
    * @param error - The Error that was thrown
+   * @category Event Handler
    */
   abstract async error(error: Error): Promise<void>
 
   /**
    * Gets called whenever a guild is created that is visible to the Bot.
    * @param guild - The newly created Guild
+   * @category Event Handler
    */
   abstract async guildCreate(guild: Guild): Promise<void>
 
   /**
    * Gets called whenever a guild that is visible to the Bot gets deleted.
    * @param guild - The newly deleted Guild
+   * @category Event Handler
    */
   abstract async guildDelete(guild: Guild): Promise<void>
 
   /**
    * Gets called whenever a new member joins a guild visible to the Bot.
    * @param serverMember - The new Guild member
+   * @category Event Handler
    */
   abstract async guildMemberAdd(serverMember: ServerMember): Promise<void>
 
   /**
    * Gets called whenever a member leaves a guild for any reason.
    * @param serverMember - The old Guild member
+   * @category Event Handler
    */
   abstract async guildMemberRemove(serverMember: ServerMember): Promise<void>
 
@@ -196,6 +204,7 @@ export abstract class Bot extends Client implements IClientEvents {
    * Keep in mind that this gets called before the message is passed to the command handler.
    *
    * @param message - The message that triggered the function call
+   * @category Event Handler
    */
   abstract async message(message: Message): Promise<void>
 
@@ -203,35 +212,41 @@ export abstract class Bot extends Client implements IClientEvents {
    * Gets called when a user clicks a button on a message sent by the bot.
    * @param button - The Button that was clicked
    * @param done - The function to call after the bot has finished processing the event
+   * @category Event Handler
    */
   abstract async messageButtonClicked(button: IMessageButton, done: (/** A message to display to the user that just clicked the button */message?: string) => Promise<Record<string, unknown>>): Promise<void>
 
   /**
    * Gets called whenever a message visible to the bot is updated.
    * @param message - The message as it appears after the update
+   * @category Event Handler
    */
   abstract async messageUpdate(message: Message): Promise<void>
 
   /**
    * Gets called whenever a visible user changes their presence.
    * @param presence - The new presence
+   * @category Event Handler
    */
   abstract async presenceUpdate(presence: Presence): Promise<void>
 
   /**
    * Gets called after the bot has finished authentication.
+   * @category Event Handler
    */
   abstract async ready(): Promise<void>
 
   /**
    * Gets called whenever a role is created taht is visible to the bot.
    * @param role - The newly created role
+   * @category Event Handler
    */
   abstract async roleCreate(role: Role): Promise<void>
 
   /**
    * Gets called whenever a role visible to the bot is updated.
    * @param role - The role as it appears after the update
+   * @category Event Handler
    */
   abstract async roleUpdate(role: Role): Promise<void>
 
@@ -239,6 +254,7 @@ export abstract class Bot extends Client implements IClientEvents {
    * Determines whether or not a string triggers a command.
    * Example use would be for prefix checks.
    * @param string - The string to check.
+   * @category Event Handler
    */
   abstract triggersCommand(string: string): number|null
 
@@ -247,6 +263,7 @@ export abstract class Bot extends Client implements IClientEvents {
    * @param token - The token to authenticate with. If not passed, uses the token passed in the constructor.
    * @throws
    * Throws error if there is no token to authenticate with.
+   * @category Event Handler
    */
   async login (token?: string): Promise<unknown> {
     return super.login(token ?? this.loginToken ?? (() => { throw new Error('Tried to start bot without token.') })())
