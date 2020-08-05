@@ -12,4 +12,4 @@ The package is published on NPM
 
 ## Example
 
-One example can be seen in the /example folder in the GitHub repository.
+One example can be seen in the [example](./example) folder in the GitHub repository.
