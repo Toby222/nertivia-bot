@@ -27,7 +27,7 @@
     "typescript": "^3.9.7"
   },
   "dependencies": {
-    "lexure": "^0.14.0",
+    "lexure": "^0.15.0",
     "nertivia.js": "git://github.com/toman222/nertivia.js.git#build"
   },
   "directoeries": {
