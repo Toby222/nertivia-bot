@@ -30,7 +30,7 @@
     "lexure": "^0.16.0",
     "nertivia.js": "git://github.com/toman222/nertivia.js.git#build"
   },
-  "directoeries": {
+  "directories": {
     "example": "example"
   },
   "repository": {
