@@ -52,8 +52,7 @@
           "varsIgnorePattern": "^_"
         }
       ],
-      "@typescript-eslint/no-empty-function": "off",
-      "tsdoc/syntax": "warn"
+      "@typescript-eslint/no-empty-function": "off"
     },
     "extends": [
       "eslint:recommended",
@@ -61,8 +60,7 @@
       "plugin:@typescript-eslint/recommended"
     ],
     "plugins": [
-      "@typescript-eslint/eslint-plugin",
-      "eslint-plugin-tsdoc"
+      "@typescript-eslint/eslint-plugin"
     ]
   }
 }
