@@ -3,31 +3,175 @@ import { IClientEvents } from 'nertivia.js/dist/Interfaces/ClientEvents';
 import { IMessageButton } from 'nertivia.js/dist/Interfaces/MessageButton';
 import { Command } from '.';
 import * as Lexure from 'lexure';
+/**
+ * Options to pass to a new Bot instance
+ */
 export interface BotOpts {
+    /**
+     * A token to use for authentication
+     *
+     * @remarks
+     * A token passed to the {@link Bot.login} method will overwrite this.
+     */
     token: string;
+    respondToOthers: boolean;
+    respondToSelf: boolean;
 }
+/**
+ * Intermediate class between API Client and a command-ready bot
+ *
+ * @param opts - The options to the bot.
+ */
 export declare abstract class Bot extends Client implements IClientEvents {
-    constructor(opts: Partial<BotOpts>);
-    handleMessage(message: Message): Promise<void>;
-    parseCommand(str: string): [Command, Lexure.Args] | null;
-    registerCommand(name: string, command: Command, overwrite?: boolean): void;
-    unregisterCommand(name: string, force?: boolean): void;
+    /** Authentication token to use on login if no other one is supplied. */
     private loginToken?;
+    /** Collection of the Bot's commands by name. */
     readonly commands: Map<string, Command>;
+    /** Which messages to check for command invocation. */
+    respondToOthers: boolean;
+    /** Which messages to check for command invocation. */
+    respondToSelf: boolean;
+    /**
+     * @param opts - The options to the bot.
+     */
+    constructor(opts: Partial<BotOpts>);
+    /**
+     * Gets called whenever the client receives a message.
+     *
+     * @remarks
+     * Distinct from the {@link message} function in that it also triggers the command handler.
+     *
+     * @param message - The Message that triggered the function call
+     * @internal
+     */
+    private handleMessage;
+    /**
+     *
+     * @returns
+     * If successful, as determined by {@link Bot.triggersCommand}, the Command and Arguments.
+     * Null otherwise.
+     *
+     * @param str - The string to work on.
+     * @sealed
+     */
+    parseCommand(str: string): [Command, Lexure.Args] | null;
+    /**
+     * Registers a new Command to the bot.
+     *
+     * @param name - The name to assign for the command. Each name can only be assigned once.
+     * @param command - The command to assign.
+     * @param overwrite - Whether to force assigning a command, even if the name is already registered.
+     *
+     * @sealed
+     */
+    registerCommand(name: string, command: Command, overwrite?: boolean): void;
+    /**
+     *
+     * @param name - The name of the command to unregister.
+     * @param force - Whether to force unassigning, even if there is no command of that name.
+     */
+    unregisterCommand(name: string, force?: boolean): void;
+    /**
+     * Gets called whenever a channel is created that is visible to the Bot.
+     * @param channel - The newly created Channel.
+     * @category Event Handler
+     */
     abstract channelCreate(channel: Channel): Promise<void>;
+    /**
+     * Gets called whenever a channel that is visible to the Bot is deleted.
+     * @param channel - The newly deleted Channel
+     * @category Event Handler
+     */
     abstract channelDelete(channel: Channel): Promise<void>;
+    /**
+     * Gets called whenever a command throws an error.
+     * @param error - The Error that was thrown
+     * @category Event Handler
+     */
     abstract error(error: Error): Promise<void>;
+    /**
+     * Gets called whenever a guild is created that is visible to the Bot.
+     * @param guild - The newly created Guild
+     * @category Event Handler
+     */
     abstract guildCreate(guild: Guild): Promise<void>;
+    /**
+     * Gets called whenever a guild that is visible to the Bot gets deleted.
+     * @param guild - The newly deleted Guild
+     * @category Event Handler
+     */
     abstract guildDelete(guild: Guild): Promise<void>;
+    /**
+     * Gets called whenever a new member joins a guild visible to the Bot.
+     * @param serverMember - The new Guild member
+     * @category Event Handler
+     */
     abstract guildMemberAdd(serverMember: ServerMember): Promise<void>;
+    /**
+     * Gets called whenever a member leaves a guild for any reason.
+     * @param serverMember - The old Guild member
+     * @category Event Handler
+     */
     abstract guildMemberRemove(serverMember: ServerMember): Promise<void>;
+    /**
+     * Gets called whenever the client receives a message.
+     *
+     * @remarks
+     * Keep in mind that this gets called before the message is passed to the command handler.
+     *
+     * @param message - The message that triggered the function call
+     * @category Event Handler
+     */
     abstract message(message: Message): Promise<void>;
-    abstract messageButtonClicked(Button: IMessageButton, done: (message?: string) => Promise<Record<string, unknown>>): Promise<void>;
+    /**
+     * Gets called when a user clicks a button on a message sent by the bot.
+     * @param button - The Button that was clicked
+     * @param done - The function to call after the bot has finished processing the event
+     * @category Event Handler
+     */
+    abstract messageButtonClicked(button: IMessageButton, done: (/** A message to display to the user that just clicked the button */ message?: string) => Promise<Record<string, unknown>>): Promise<void>;
+    /**
+     * Gets called whenever a message visible to the bot is updated.
+     * @param message - The message as it appears after the update
+     * @category Event Handler
+     */
     abstract messageUpdate(message: Message): Promise<void>;
+    /**
+     * Gets called whenever a visible user changes their presence.
+     * @param presence - The new presence
+     * @category Event Handler
+     */
     abstract presenceUpdate(presence: Presence): Promise<void>;
+    /**
+     * Gets called after the bot has finished authentication.
+     * @category Event Handler
+     */
     abstract ready(): Promise<void>;
+    /**
+     * Gets called whenever a role is created taht is visible to the bot.
+     * @param role - The newly created role
+     * @category Event Handler
+     */
     abstract roleCreate(role: Role): Promise<void>;
+    /**
+     * Gets called whenever a role visible to the bot is updated.
+     * @param role - The role as it appears after the update
+     * @category Event Handler
+     */
     abstract roleUpdate(role: Role): Promise<void>;
+    /**
+     * Determines whether or not a string triggers a command.
+     * Example use would be for prefix checks.
+     * @param string - The string to check.
+     * @category Event Handler
+     */
     abstract triggersCommand(string: string): number | null;
+    /**
+     * Authenticate with the server.
+     * @param token - The token to authenticate with. If not passed, uses the token passed in the constructor.
+     * @throws
+     * Throws error if there is no token to authenticate with.
+     * @category Event Handler
+     */
     login(token?: string): Promise<unknown>;
 }

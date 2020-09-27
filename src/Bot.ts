@@ -17,7 +17,9 @@ export interface BotOpts {
    * @remarks
    * A token passed to the {@link Bot.login} method will overwrite this.
    */
-  token?: string
+  token: string
+  respondToOthers: boolean
+  respondToSelf: boolean
 }
 
 /**
@@ -31,11 +33,19 @@ export abstract class Bot extends Client implements IClientEvents {
   /** Collection of the Bot's commands by name. */
   readonly commands: Map<string, Command> = new Map<string, Command>()
 
+  /** Which messages to check for command invocation. */
+  respondToOthers: boolean
+  /** Which messages to check for command invocation. */
+  respondToSelf: boolean
+
   /**
    * @param opts - The options to the bot.
    */
-  constructor (opts: BotOpts) {
+  constructor (opts: Partial<BotOpts>) {
     super()
+
+    this.respondToOthers = opts.respondToOthers ?? true
+    this.respondToSelf = opts.respondToSelf ?? false
 
     this.loginToken = opts.token
     // Initialize all events
@@ -72,7 +82,8 @@ export abstract class Bot extends Client implements IClientEvents {
     await this.message(message)
 
     if (message.content === undefined) { return }
-    if ((message.author.id === this.user?.id) === this.user?.bot) { return }
+    if (!(message.author.id === this.user?.id) && this.respondToSelf &&
+     !((message.author.id !== this.user?.id) && this.respondToOthers)) { return }
 
     const parsed = this.parseCommand(message.content)
     if (parsed !== null) {
@@ -153,49 +164,49 @@ export abstract class Bot extends Client implements IClientEvents {
    * @param channel - The newly created Channel.
    * @category Event Handler
    */
-  abstract async channelCreate(channel: Channel): Promise<void>
+  abstract channelCreate(channel: Channel): Promise<void>
 
   /**
    * Gets called whenever a channel that is visible to the Bot is deleted.
    * @param channel - The newly deleted Channel
    * @category Event Handler
    */
-  abstract async channelDelete(channel: Channel): Promise<void>
+  abstract channelDelete(channel: Channel): Promise<void>
 
   /**
    * Gets called whenever a command throws an error.
    * @param error - The Error that was thrown
    * @category Event Handler
    */
-  abstract async error(error: Error): Promise<void>
+  abstract error(error: Error): Promise<void>
 
   /**
    * Gets called whenever a guild is created that is visible to the Bot.
    * @param guild - The newly created Guild
    * @category Event Handler
    */
-  abstract async guildCreate(guild: Guild): Promise<void>
+  abstract guildCreate(guild: Guild): Promise<void>
 
   /**
    * Gets called whenever a guild that is visible to the Bot gets deleted.
    * @param guild - The newly deleted Guild
    * @category Event Handler
    */
-  abstract async guildDelete(guild: Guild): Promise<void>
+  abstract guildDelete(guild: Guild): Promise<void>
 
   /**
    * Gets called whenever a new member joins a guild visible to the Bot.
    * @param serverMember - The new Guild member
    * @category Event Handler
    */
-  abstract async guildMemberAdd(serverMember: ServerMember): Promise<void>
+  abstract guildMemberAdd(serverMember: ServerMember): Promise<void>
 
   /**
    * Gets called whenever a member leaves a guild for any reason.
    * @param serverMember - The old Guild member
    * @category Event Handler
    */
-  abstract async guildMemberRemove(serverMember: ServerMember): Promise<void>
+  abstract guildMemberRemove(serverMember: ServerMember): Promise<void>
 
   /**
    * Gets called whenever the client receives a message.
@@ -206,7 +217,7 @@ export abstract class Bot extends Client implements IClientEvents {
    * @param message - The message that triggered the function call
    * @category Event Handler
    */
-  abstract async message(message: Message): Promise<void>
+  abstract message(message: Message): Promise<void>
 
   /**
    * Gets called when a user clicks a button on a message sent by the bot.
@@ -214,41 +225,41 @@ export abstract class Bot extends Client implements IClientEvents {
    * @param done - The function to call after the bot has finished processing the event
    * @category Event Handler
    */
-  abstract async messageButtonClicked(button: IMessageButton, done: (/** A message to display to the user that just clicked the button */message?: string) => Promise<Record<string, unknown>>): Promise<void>
+  abstract messageButtonClicked(button: IMessageButton, done: (/** A message to display to the user that just clicked the button */message?: string) => Promise<Record<string, unknown>>): Promise<void>
 
   /**
    * Gets called whenever a message visible to the bot is updated.
    * @param message - The message as it appears after the update
    * @category Event Handler
    */
-  abstract async messageUpdate(message: Message): Promise<void>
+  abstract messageUpdate(message: Message): Promise<void>
 
   /**
    * Gets called whenever a visible user changes their presence.
    * @param presence - The new presence
    * @category Event Handler
    */
-  abstract async presenceUpdate(presence: Presence): Promise<void>
+  abstract presenceUpdate(presence: Presence): Promise<void>
 
   /**
    * Gets called after the bot has finished authentication.
    * @category Event Handler
    */
-  abstract async ready(): Promise<void>
+  abstract ready(): Promise<void>
 
   /**
    * Gets called whenever a role is created taht is visible to the bot.
    * @param role - The newly created role
    * @category Event Handler
    */
-  abstract async roleCreate(role: Role): Promise<void>
+  abstract roleCreate(role: Role): Promise<void>
 
   /**
    * Gets called whenever a role visible to the bot is updated.
    * @param role - The role as it appears after the update
    * @category Event Handler
    */
-  abstract async roleUpdate(role: Role): Promise<void>
+  abstract roleUpdate(role: Role): Promise<void>
 
   /**
    * Determines whether or not a string triggers a command.
