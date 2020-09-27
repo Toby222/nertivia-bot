@@ -2,11 +2,18 @@ import { IMessageButton } from 'nertivia.js/dist/Interfaces/MessageButton'
 
 import { Bot, Presence, ServerMember, Guild, Channel, Role, Message } from 'nertivia-bot'
 
+export enum ResponseMode {
+  none,
+  self,
+  others,
+  both
+}
+
 export class CustomBot extends Bot {
   prefix: string
 
-  constructor (prefix: string, token?: string) {
-    super({ token })
+  constructor (prefix: string, token?: string, respondTo: ResponseMode = ResponseMode.others) {
+    super({ token, respondToOthers: [ResponseMode.others, ResponseMode.both].includes(respondTo), respondToSelf: [ResponseMode.self, ResponseMode.both].includes(respondTo) })
 
     this.prefix = prefix
   }
