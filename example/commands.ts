@@ -25,7 +25,7 @@ export async function rainbow (_bot: Bot, msg: Message, args: CommandArgs): Prom
         result = result[0] + result[1] + result[3] + result[5];
       }
 
-      return result;
+      return result
   }
   
   for (let i = 0; i < input.length; i++) {
