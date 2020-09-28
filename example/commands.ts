@@ -4,8 +4,26 @@ import { Bot, CommandArgs, Embed, Message } from 'nertivia-bot'
 export async function rainbow (_bot: Bot, msg: Message, args: CommandArgs): Promise<void> {
   let result = ''
   const input = args.many().map(token => token.raw + token.trailing).join('').split('')
+   
+  function toRgb(h){
+      var hue2rgb = function hue2rgb(t){
+          if(t < 0) t += 1;
+          if(t > 1) t -= 1;
+          if(t < 1/6) return 6 * t;
+          if(t < 1/2) return 1;
+          if(t < 2/3) return (2/3 - t) * 6;
+          return 0;
+      }
+
+      const r = hue2rgb(h + 1/3);
+      const g = hue2rgb(h);
+      const b = hue2rgb(h - 1/3);
+
+      return '#'+[Math.round(r * 255), Math.round(g * 255), Math.round(b * 255)].map(num => num.toString(16).padStart(2, '0')).join('');
+  }
+  
   for (let i = 0; i < input.length; i++) {
-    result += `{#hsl(${360 * i / input.length},100%,50%)}${input[i]}§r`
+    result += `{${toRgb(i / input.length)},100%,50%)}${input[i]}§r`
   }
   msg.reply(result)?.catch(reason => console.error(reason))
 }
