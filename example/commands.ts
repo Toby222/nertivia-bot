@@ -23,7 +23,7 @@ export async function rainbow (_bot: Bot, msg: Message, args: CommandArgs): Prom
   }
   
   for (let i = 0; i < input.length; i++) {
-    result += `{${toRgb(i / input.length)},100%,50%)}${input[i]}§r`
+    result += `{${toRgb(i / input.length)}}${input[i]}§r`
   }
   msg.reply(result)?.catch(reason => console.error(reason))
 }
