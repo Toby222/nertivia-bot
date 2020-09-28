@@ -7,19 +7,25 @@ export async function rainbow (_bot: Bot, msg: Message, args: CommandArgs): Prom
    
   function toRgb(h){
       var hue2rgb = function hue2rgb(t){
-          if(t < 0) t += 1;
-          if(t > 1) t -= 1;
-          if(t < 1/6) return 6 * t;
-          if(t < 1/2) return 1;
-          if(t < 2/3) return (2/3 - t) * 6;
-          return 0;
+          if(t < 0) t += 1
+          if(t > 1) t -= 1
+          if(t < 1/6) return 6 * t
+          if(t < 1/2) return 1
+          if(t < 2/3) return (2/3 - t) * 6
+          return 0
       }
 
-      const r = hue2rgb(h + 1/3);
-      const g = hue2rgb(h);
-      const b = hue2rgb(h - 1/3);
+      const r = hue2rgb(h + 1/3)
+      const g = hue2rgb(h)
+      const b = hue2rgb(h - 1/3)
 
-      return '#'+[Math.round(r * 255), Math.round(g * 255), Math.round(b * 255)].map(num => num.toString(16).padStart(2, '0')).join('');
+      let result = '#'+[Math.round(r * 255), Math.round(g * 255), Math.round(b * 255)].map(num => num.toString(16).padStart(2, '0')).join('');
+        
+      if(result[1] === result[2] && result[3] === result[4] && result[5] === result[6]) {
+        result = result[0] + result[1] + result[3] + result[5];
+      }
+
+      return result;
   }
   
   for (let i = 0; i < input.length; i++) {
