@@ -4,36 +4,45 @@ import { Bot, CommandArgs, Embed, Message } from 'nertivia-bot'
 export async function rainbow (_bot: Bot, msg: Message, args: CommandArgs): Promise<void> {
   let result = ''
   const input = args.many().map(token => token.raw + token.trailing).join('').split('')
-   
-  function toRgb(h){
-      var hue2rgb = function hue2rgb(t){
-          if(t < 0) t += 1
-          if(t > 1) t -= 1
-          if(t < 1/6) return 6 * t
-          if(t < 1/2) return 1
-          if(t < 2/3) return (2/3 - t) * 6
-          return 0
-      }
 
-      const r = hue2rgb(h + 1/3)
-      const g = hue2rgb(h)
-      const b = hue2rgb(h - 1/3)
+  function toRgb(h: number, s = 1, l = 0.5) {
+    function hue2rgb(p, q, t) {
+      if (t < 0) t += 1
+      if (t > 1) t -= 1
+      if (t < 1 / 6) return p + (q - p) * 6 * t
+      if (t < 1 / 2) return q
+      if (t < 2 / 3) return p + (q - p) * (2 / 3 - t) * 6
+      return p
+    }
 
-      let result = '#'+[Math.round(r * 255), Math.round(g * 255), Math.round(b * 255)].map(num => num.toString(16).padStart(2, '0')).join('');
-        
-      if(result[1] === result[2] && result[3] === result[4] && result[5] === result[6]) {
-        result = result[0] + result[1] + result[3] + result[5];
-      }
+    const q = l < 0.5 ? l * (1 + s) : l + s - l * s;
+    const p = 2 * l - q;
+    const r = hue2rgb(p, q, h + 1 / 3)
+    const g = hue2rgb(p, q, h)
+    const b = hue2rgb(p, q, h - 1 / 3)
 
-      return result
+    let result = `#${[Math.round(r * 255), Math.round(g * 255), Math.round(b * 255)]
+      .map((num) => num.toString(16).padStart(2, '0'))
+      .join('')}`
+
+    if (result[1] === result[2] && result[3] === result[4] && result[5] === result[6]) {
+      result = result[0] + result[1] + result[3] + result[5]
+    }
+
+    return result
   }
-  
+
+  const s = 1
+  const l = 0.5
+
   for (let i = 0; i < input.length; i++) {
-    result += `{${toRgb(i / input.length)}}${input[i]}`
+    if (input[i] === ' ') result += ' '
+    else result += `{${toRgb(i / input.length)}}${input[i]}`
   }
   result += '§r'
-  msg.reply(result)?.catch(reason => console.error(reason))
+  msg.reply(result)?.catch((reason) => console.error(reason))
 }
+
 export namespace rainbow {
   export const helpStringShort = 'Gives a message in a rainbow-y hue.'
   export const helpString = helpStringShort + '\n\nPerfect to show off some pride'
